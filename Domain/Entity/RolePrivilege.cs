@@ -1,0 +1,12 @@
+namespace Domain.Entity
+{
+    public class RolePrivilege
+    {
+        public Guid Id { get; set; }
+        public Guid RoleId { get; set; }
+        public Guid PrivilegeId { get; set; }
+
+        public Role Role { get; set; } = null!;
+        public Privilege Privilege { get; set; } = null!;
+    }
+}
