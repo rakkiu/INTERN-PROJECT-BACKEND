@@ -6,7 +6,7 @@ namespace Domain.Entity
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
 
-        public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
-        public ICollection<RolePrivilege> RolePrivileges { get; set; } = new List<RolePrivilege>(); // THÊM DÒNG NÀY
+        public ICollection<User> Users { get; set; } = new List<User>();
+        public ICollection<RolePrivilege> RolePrivileges { get; set; } = new List<RolePrivilege>();
     }
 }

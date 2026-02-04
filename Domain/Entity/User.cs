@@ -10,9 +10,9 @@ namespace Domain.Entity
         public string? Phone { get; set; }
         public string? Address { get; set; }
 
-        // Removed: public Role Role { get; set; } = null!; 
+        public Guid RoleId { get; set; }
+        public Role Role { get; set; } = null!;
 
         public ICollection<JwtToken> JwtTokens { get; set; } = new List<JwtToken>();
-        public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
     }
 }

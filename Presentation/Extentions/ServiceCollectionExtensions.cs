@@ -8,6 +8,8 @@ using Infrastructure.Security;
 using Domain.Interfaces;
 using Infrastructure.Identity; // Add this
 using Infrastructure.Shared;
+using Infrastructure.Repository;
+using Application.Usecase.Auth;
 
 namespace Presentation.Extentions
 {
@@ -29,17 +31,17 @@ namespace Presentation.Extentions
                     opt.UseNpgsql(config.GetConnectionString("DefaultConnection")));
             }
 
-            // 🔹 Dependency Injection
+            //Dependency Injection
             // Register repositories
-            //services.AddScoped<IUserRepository, UserRepository>();
-            //services.AddScoped<IJwtTokenRepository, JwtTokenRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IJwtTokenRepository, JwtRepository>();
 
             // Register services
             services.Configure<JwtSettings>(config.GetSection("JwtSettings")); // Configure JwtSettings
             services.AddScoped<IJwtService, JwtService>(); // Register JwtService
 
             // 🔹 MediatR
-            //services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(LoginHandler).Assembly));
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(LoginHandler).Assembly));
 
             // 🔹 JWT Authentication
             var secretKey = config["JwtSettings:SecretKey"];
