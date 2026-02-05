@@ -9,7 +9,7 @@ using Domain.Interfaces;
 using Infrastructure.Identity; // Add this
 using Infrastructure.Shared;
 using Infrastructure.Repository;
-using Application.Usecase.Auth;
+using Application.Usecase.Auth.Login;
 
 namespace Presentation.Extentions
 {

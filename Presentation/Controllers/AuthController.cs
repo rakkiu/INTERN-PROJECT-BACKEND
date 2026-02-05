@@ -1,5 +1,7 @@
 ﻿using Application.Model.Auth.Login;
-using Application.Usecase.Auth;
+using Application.Model.Auth.Refresh;
+using Application.Usecase.Auth.Login;
+using Application.Usecase.Auth.Refresh;
 using MediatR;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +35,20 @@ namespace Presentation.Controllers
                 ResponsedAt = DateTime.UtcNow
             });
 
+        }
+
+        [HttpPost("refresh")]
+        [ProducesResponseType(typeof(ApiResponse<RefreshResponseDto>), 200)]
+        public async Task<ActionResult<ApiResponse<RefreshResponseDto>>> Refresh([FromBody] RefreshCommand command)
+        {
+            var res = await _mediator.Send(command);
+            return Ok(new ApiResponse<RefreshResponseDto>
+            {
+                StatusCode = 200,
+                Message = "Token refreshed successfully",
+                Data = res,
+                ResponsedAt = DateTime.UtcNow
+            });
         }
     }
 }
