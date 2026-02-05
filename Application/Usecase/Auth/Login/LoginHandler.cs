@@ -5,7 +5,7 @@ using Domain.Interface;
 using Domain.Interfaces;
 using MediatR;
 
-namespace Application.Usecase.Auth
+namespace Application.Usecase.Auth.Login
 {
     public class LoginHandler : IRequestHandler<LoginCommand, LoginResponseDto>
     {
