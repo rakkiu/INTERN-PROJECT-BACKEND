@@ -1,9 +1,9 @@
 namespace Domain.Entity
 {
     /// <summary>
-    /// Task entity for task management
+    /// WorkTask entity for task management
     /// </summary>
-    public class Task
+    public class WorkTask
     {
         public Guid Id { get; set; }
         public string Title { get; set; } = null!;

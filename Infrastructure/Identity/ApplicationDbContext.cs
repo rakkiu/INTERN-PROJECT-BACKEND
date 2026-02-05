@@ -15,7 +15,7 @@ namespace Infrastructure.Identity
         public DbSet<Privilege> Privileges { get; set; }
         public DbSet<RolePrivilege> RolePrivileges { get; set; }
         public DbSet<JwtToken> JwtTokens { get; set; }
-        public DbSet<Domain.Entity.Task> Tasks { get; set; }
+        public DbSet<WorkTask> Tasks { get; set; }
         public DbSet<Worklog> Worklogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -42,8 +42,8 @@ namespace Infrastructure.Identity
                 entity.HasIndex(e => e.Name).IsUnique();
             });
 
-            // Task Configuration
-            modelBuilder.Entity<Domain.Entity.Task>(entity =>
+            // WorkTask Configuration
+            modelBuilder.Entity<WorkTask>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.HasIndex(e => e.Status);

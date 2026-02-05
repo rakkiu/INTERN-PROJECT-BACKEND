@@ -14,7 +14,7 @@ namespace Infrastructure.Repository
             _context = context;
         }
 
-        public async Task<Worklog?> GetByIdAsync(Guid id)
+        public async System.Threading.Tasks.Task<Worklog?> GetByIdAsync(Guid id)
         {
             return await _context.Worklogs
                 .Include(w => w.Task)
@@ -22,7 +22,7 @@ namespace Infrastructure.Repository
                 .FirstOrDefaultAsync(w => w.Id == id);
         }
 
-        public async Task<IEnumerable<Worklog>> GetAllAsync()
+        public async System.Threading.Tasks.Task<IEnumerable<Worklog>> GetAllAsync()
         {
             return await _context.Worklogs
                 .Include(w => w.Task)
@@ -31,7 +31,7 @@ namespace Infrastructure.Repository
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Worklog>> GetByUserIdAsync(Guid userId)
+        public async System.Threading.Tasks.Task<IEnumerable<Worklog>> GetByUserIdAsync(Guid userId)
         {
             return await _context.Worklogs
                 .Include(w => w.Task)
@@ -40,7 +40,7 @@ namespace Infrastructure.Repository
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Worklog>> GetByTaskIdAsync(Guid taskId)
+        public async System.Threading.Tasks.Task<IEnumerable<Worklog>> GetByTaskIdAsync(Guid taskId)
         {
             return await _context.Worklogs
                 .Include(w => w.User)
@@ -49,7 +49,7 @@ namespace Infrastructure.Repository
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Worklog>> GetByUserIdAndDateRangeAsync(Guid userId, DateTime startDate, DateTime endDate)
+        public async System.Threading.Tasks.Task<IEnumerable<Worklog>> GetByUserIdAndDateRangeAsync(Guid userId, DateTime startDate, DateTime endDate)
         {
             return await _context.Worklogs
                 .Include(w => w.Task)
@@ -58,7 +58,7 @@ namespace Infrastructure.Repository
                 .ToListAsync();
         }
 
-        public async Task<Worklog?> GetByUserTaskAndDateAsync(Guid userId, Guid taskId, DateTime date)
+        public async System.Threading.Tasks.Task<Worklog?> GetByUserTaskAndDateAsync(Guid userId, Guid taskId, DateTime date)
         {
             return await _context.Worklogs
                 .Include(w => w.Task)
@@ -66,14 +66,14 @@ namespace Infrastructure.Repository
                 .FirstOrDefaultAsync(w => w.UserId == userId && w.TaskId == taskId && w.Date.Date == date.Date);
         }
 
-        public async Task<decimal> GetTotalHoursByUserAndDateAsync(Guid userId, DateTime date)
+        public async System.Threading.Tasks.Task<decimal> GetTotalHoursByUserAndDateAsync(Guid userId, DateTime date)
         {
             return await _context.Worklogs
                 .Where(w => w.UserId == userId && w.Date.Date == date.Date)
                 .SumAsync(w => w.HoursSpent);
         }
 
-        public async Task<Worklog> CreateAsync(Worklog worklog)
+        public async System.Threading.Tasks.Task<Worklog> CreateAsync(Worklog worklog)
         {
             worklog.CreatedAt = DateTime.UtcNow;
             worklog.UpdatedAt = DateTime.UtcNow;
@@ -84,7 +84,7 @@ namespace Infrastructure.Repository
             return worklog;
         }
 
-        public async Task<Worklog> UpdateAsync(Worklog worklog)
+        public async System.Threading.Tasks.Task<Worklog> UpdateAsync(Worklog worklog)
         {
             worklog.UpdatedAt = DateTime.UtcNow;
             
@@ -94,7 +94,7 @@ namespace Infrastructure.Repository
             return worklog;
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public async System.Threading.Tasks.Task<bool> DeleteAsync(Guid id)
         {
             var worklog = await _context.Worklogs.FindAsync(id);
             if (worklog == null)
@@ -105,7 +105,7 @@ namespace Infrastructure.Repository
             return true;
         }
 
-        public async Task<bool> ExistsAsync(Guid userId, Guid taskId, DateTime date)
+        public async System.Threading.Tasks.Task<bool> ExistsAsync(Guid userId, Guid taskId, DateTime date)
         {
             return await _context.Worklogs
                 .AnyAsync(w => w.UserId == userId && w.TaskId == taskId && w.Date.Date == date.Date);

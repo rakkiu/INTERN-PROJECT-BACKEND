@@ -15,7 +15,7 @@ namespace Domain.Entity
 
         // Foreign Keys
         public Guid TaskId { get; set; }
-        public Task Task { get; set; } = null!;
+        public WorkTask Task { get; set; } = null!;
         
         public Guid UserId { get; set; }
         public User User { get; set; } = null!;

@@ -19,8 +19,8 @@ namespace Domain.Entity
 
         // Navigation Properties
         public ICollection<JwtToken> JwtTokens { get; set; } = new List<JwtToken>();
-        public ICollection<Task> AssignedTasks { get; set; } = new List<Task>();
-        public ICollection<Task> CreatedTasks { get; set; } = new List<Task>();
+        public ICollection<WorkTask> AssignedTasks { get; set; } = new List<WorkTask>();
+        public ICollection<WorkTask> CreatedTasks { get; set; } = new List<WorkTask>();
         public ICollection<Worklog> Worklogs { get; set; } = new List<Worklog>();
     }
 }

@@ -4,13 +4,13 @@ namespace Domain.Interface
 {
     public interface ITaskRepository
     {
-        Task<Entity.Task?> GetByIdAsync(Guid id);
-        Task<IEnumerable<Entity.Task>> GetAllAsync();
-        Task<IEnumerable<Entity.Task>> GetByAssigneeIdAsync(Guid assigneeId);
-        Task<IEnumerable<Entity.Task>> GetByCreatorIdAsync(Guid creatorId);
-        Task<Entity.Task> CreateAsync(Entity.Task task);
-        Task<Entity.Task> UpdateAsync(Entity.Task task);
-        Task<bool> DeleteAsync(Guid id);
-        Task<bool> ExistsAsync(Guid id);
+        System.Threading.Tasks.Task<WorkTask?> GetByIdAsync(Guid id);
+        System.Threading.Tasks.Task<IEnumerable<WorkTask>> GetAllAsync();
+        System.Threading.Tasks.Task<IEnumerable<WorkTask>> GetByAssigneeIdAsync(Guid assigneeId);
+        System.Threading.Tasks.Task<IEnumerable<WorkTask>> GetByCreatorIdAsync(Guid creatorId);
+        System.Threading.Tasks.Task<WorkTask> CreateAsync(WorkTask task);
+        System.Threading.Tasks.Task<WorkTask> UpdateAsync(WorkTask task);
+        System.Threading.Tasks.Task<bool> DeleteAsync(Guid id);
+        System.Threading.Tasks.Task<bool> ExistsAsync(Guid id);
     }
 }

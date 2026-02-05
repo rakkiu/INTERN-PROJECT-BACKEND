@@ -14,7 +14,7 @@ namespace Infrastructure.Repository
             _context = context;
         }
 
-        public async Task<Domain.Entity.Task?> GetByIdAsync(Guid id)
+        public async System.Threading.Tasks.Task<WorkTask?> GetByIdAsync(Guid id)
         {
             return await _context.Tasks
                 .Include(t => t.Assignee)
@@ -23,7 +23,7 @@ namespace Infrastructure.Repository
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
-        public async Task<IEnumerable<Domain.Entity.Task>> GetAllAsync()
+        public async System.Threading.Tasks.Task<IEnumerable<WorkTask>> GetAllAsync()
         {
             return await _context.Tasks
                 .Include(t => t.Assignee)
@@ -32,7 +32,7 @@ namespace Infrastructure.Repository
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Domain.Entity.Task>> GetByAssigneeIdAsync(Guid assigneeId)
+        public async System.Threading.Tasks.Task<IEnumerable<WorkTask>> GetByAssigneeIdAsync(Guid assigneeId)
         {
             return await _context.Tasks
                 .Include(t => t.Assignee)
@@ -42,7 +42,7 @@ namespace Infrastructure.Repository
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Domain.Entity.Task>> GetByCreatorIdAsync(Guid creatorId)
+        public async System.Threading.Tasks.Task<IEnumerable<WorkTask>> GetByCreatorIdAsync(Guid creatorId)
         {
             return await _context.Tasks
                 .Include(t => t.Assignee)
@@ -52,7 +52,7 @@ namespace Infrastructure.Repository
                 .ToListAsync();
         }
 
-        public async Task<Domain.Entity.Task> CreateAsync(Domain.Entity.Task task)
+        public async System.Threading.Tasks.Task<WorkTask> CreateAsync(WorkTask task)
         {
             task.CreatedAt = DateTime.UtcNow;
             task.UpdatedAt = DateTime.UtcNow;
@@ -63,7 +63,7 @@ namespace Infrastructure.Repository
             return task;
         }
 
-        public async Task<Domain.Entity.Task> UpdateAsync(Domain.Entity.Task task)
+        public async System.Threading.Tasks.Task<WorkTask> UpdateAsync(WorkTask task)
         {
             task.UpdatedAt = DateTime.UtcNow;
             
@@ -73,7 +73,7 @@ namespace Infrastructure.Repository
             return task;
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public async System.Threading.Tasks.Task<bool> DeleteAsync(Guid id)
         {
             var task = await _context.Tasks.FindAsync(id);
             if (task == null)
@@ -84,7 +84,7 @@ namespace Infrastructure.Repository
             return true;
         }
 
-        public async Task<bool> ExistsAsync(Guid id)
+        public async System.Threading.Tasks.Task<bool> ExistsAsync(Guid id)
         {
             return await _context.Tasks.AnyAsync(t => t.Id == id);
         }
