@@ -34,7 +34,9 @@ namespace Presentation.Extentions
             //Dependency Injection
             // Register repositories
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IJwtTokenRepository, JwtRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<ITaskRepository, TaskRepository>();
+            services.AddScoped<IWorklogRepository, WorklogRepository>();
 
             // Register services
             services.Configure<JwtSettings>(config.GetSection("JwtSettings")); // Configure JwtSettings
