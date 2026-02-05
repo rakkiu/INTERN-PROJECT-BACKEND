@@ -11,124 +11,110 @@ namespace Infrastructure.Seed
         {
             try
             {
-                // 1. Seed Privileges
-                var privileges = new[]
-                {
-                    new { Name = "user.create", Description = "Create users", Category = "User Management" },
-                    new { Name = "user.read", Description = "View users", Category = "User Management" },
-                    new { Name = "user.update", Description = "Update users", Category = "User Management" },
-                    new { Name = "user.delete", Description = "Delete users", Category = "User Management" },
-                    new { Name = "product.create", Description = "Create products", Category = "Product Management" },
-                    new { Name = "product.read", Description = "View products", Category = "Product Management" },
-                    new { Name = "product.update", Description = "Update products", Category = "Product Management" },
-                    new { Name = "product.delete", Description = "Delete products", Category = "Product Management" }
+                // 1. Seed Roles (ADMIN, LEADER, MEMBER)
+                var roles = new[] 
+                { 
+                    new { Name = RoleNames.ADMIN, Description = "System Administrator" },
+                    new { Name = RoleNames.LEADER, Description = "Team Leader" },
+                    new { Name = RoleNames.MEMBER, Description = "Team Member" }
                 };
-
-                foreach (var priv in privileges)
+                
+                foreach (var roleData in roles)
                 {
-                    if (!await context.Privileges.AnyAsync(p => p.Name == priv.Name))
-                    {
-                        await context.Privileges.AddAsync(new Privilege
-                        {
-                            Id = Guid.NewGuid(),
-                            Name = priv.Name,
-                            Description = priv.Description,
-                            Category = priv.Category
-                        });
-                    }
-                }
-                await context.SaveChangesAsync();
-
-                // 2. Seed Roles
-                var roles = new[] { "Seller", "Customer" };
-                foreach (var roleName in roles)
-                {
-                    if (!await context.Roles.AnyAsync(r => r.Name == roleName))
+                    if (!await context.Roles.AnyAsync(r => r.Name == roleData.Name))
                     {
                         await context.Roles.AddAsync(new Role
                         {
                             Id = Guid.NewGuid(),
-                            Name = roleName,
-                            Description = $"Default role for {roleName}"
+                            Name = roleData.Name,
+                            CreatedAt = DateTime.UtcNow
                         });
                     }
                 }
                 await context.SaveChangesAsync();
 
-                // 3. Assign Privileges to Roles
-                var sellerRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == "Seller");
-                var customerRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == "Customer");
-
-                if (sellerRole != null)
+                // 2. Seed Default Admin User
+                var adminEmail = "admin@rakkiu.com";
+                var encryptedAdminEmail = EncryptionHelper.EncryptDeterministic(adminEmail);
+                
+                if (!await context.Users.AnyAsync(u => u.Email == encryptedAdminEmail))
                 {
-                    // Seller có tất cả quyền
-                    var allPrivileges = await context.Privileges.ToListAsync();
-                    foreach (var privilege in allPrivileges)
+                    var adminRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == RoleNames.ADMIN);
+                    if (adminRole == null)
                     {
-                        if (!await context.RolePrivileges.AnyAsync(rp => rp.RoleId == sellerRole.Id && rp.PrivilegeId == privilege.Id))
-                        {
-                            await context.RolePrivileges.AddAsync(new RolePrivilege
-                            {
-                                Id = Guid.NewGuid(),
-                                RoleId = sellerRole.Id,
-                                PrivilegeId = privilege.Id
-                            });
-                        }
-                    }
-                }
-
-                if (customerRole != null)
-                {
-                    // Customer chỉ có quyền đọc
-                    var readPrivileges = await context.Privileges
-                        .Where(p => p.Name.EndsWith(".read"))
-                        .ToListAsync();
-                    
-                    foreach (var privilege in readPrivileges)
-                    {
-                        if (!await context.RolePrivileges.AnyAsync(rp => rp.RoleId == customerRole.Id && rp.PrivilegeId == privilege.Id))
-                        {
-                            await context.RolePrivileges.AddAsync(new RolePrivilege
-                            {
-                                Id = Guid.NewGuid(),
-                                RoleId = customerRole.Id,
-                                PrivilegeId = privilege.Id
-                            });
-                        }
-                    }
-                }
-                await context.SaveChangesAsync();
-
-                // 4. Seed Default Seller User
-                var sellerEmail = "seller@rakkiu.com";
-                var encryptedEmail = EncryptionHelper.EncryptDeterministic(sellerEmail);
-
-                if (!await context.Users.AnyAsync(u => u.Email == encryptedEmail))
-                {
-                    if (sellerRole == null)
-                    {
-                        throw new InvalidOperationException("Seller role not found. Database seeding failed.");
+                        throw new InvalidOperationException("Admin role not found. Database seeding failed.");
                     }
 
-                    var user = new User
+                    var adminUser = new User
                     {
                         Id = Guid.NewGuid(),
-                        Username = "seller",
-                        Email = encryptedEmail,
-                        PasswordHash = BCrypt.Net.BCrypt.HashPassword("Seller@123"),
-                        FullName = EncryptionHelper.Encrypt("Default Seller"),
-                        Phone = EncryptionHelper.Encrypt("0123456789"),
-                        Address = EncryptionHelper.Encrypt("System Default Address"),
-                        RoleId = sellerRole.Id
+                        Email = encryptedAdminEmail,
+                        PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
+                        FullName = EncryptionHelper.Encrypt("System Administrator"),
+                        IsActive = true,
+                        RoleId = adminRole.Id,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
                     };
 
-                    await context.Users.AddAsync(user);
+                    await context.Users.AddAsync(adminUser);
                     await context.SaveChangesAsync();
+                }
+
+                // 3. Seed Default Leader User
+                var leaderEmail = "leader@rakkiu.com";
+                var encryptedLeaderEmail = EncryptionHelper.EncryptDeterministic(leaderEmail);
+                
+                if (!await context.Users.AnyAsync(u => u.Email == encryptedLeaderEmail))
+                {
+                    var leaderRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == RoleNames.LEADER);
+                    if (leaderRole != null)
+                    {
+                        var leaderUser = new User
+                        {
+                            Id = Guid.NewGuid(),
+                            Email = encryptedLeaderEmail,
+                            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Leader@123"),
+                            FullName = EncryptionHelper.Encrypt("Team Leader"),
+                            IsActive = true,
+                            RoleId = leaderRole.Id,
+                            CreatedAt = DateTime.UtcNow,
+                            UpdatedAt = DateTime.UtcNow
+                        };
+
+                        await context.Users.AddAsync(leaderUser);
+                        await context.SaveChangesAsync();
+                    }
+                }
+
+                // 4. Seed Default Member User
+                var memberEmail = "member@rakkiu.com";
+                var encryptedMemberEmail = EncryptionHelper.EncryptDeterministic(memberEmail);
+                
+                if (!await context.Users.AnyAsync(u => u.Email == encryptedMemberEmail))
+                {
+                    var memberRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == RoleNames.MEMBER);
+                    if (memberRole != null)
+                    {
+                        var memberUser = new User
+                        {
+                            Id = Guid.NewGuid(),
+                            Email = encryptedMemberEmail,
+                            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Member@123"),
+                            FullName = EncryptionHelper.Encrypt("Team Member"),
+                            IsActive = true,
+                            RoleId = memberRole.Id,
+                            CreatedAt = DateTime.UtcNow,
+                            UpdatedAt = DateTime.UtcNow
+                        };
+
+                        await context.Users.AddAsync(memberUser);
+                        await context.SaveChangesAsync();
+                    }
                 }
             }
             catch (Exception ex)
             {
-                // Log lỗi chi tiết để debug
                 Console.WriteLine($"Error seeding database: {ex.Message}");
                 Console.WriteLine($"Inner exception: {ex.InnerException?.Message}");
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");

@@ -4,10 +4,9 @@ namespace Domain.Entity
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = null!; // ADMIN, LEADER, MEMBER
-        public string? Description { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         public ICollection<User> Users { get; set; } = new List<User>();
-        public ICollection<RolePrivilege> RolePrivileges { get; set; } = new List<RolePrivilege>();
     }
     
     /// <summary>

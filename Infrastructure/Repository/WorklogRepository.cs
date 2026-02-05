@@ -76,7 +76,6 @@ namespace Infrastructure.Repository
         public async System.Threading.Tasks.Task<Worklog> CreateAsync(Worklog worklog)
         {
             worklog.CreatedAt = DateTime.UtcNow;
-            worklog.UpdatedAt = DateTime.UtcNow;
             
             _context.Worklogs.Add(worklog);
             await _context.SaveChangesAsync();
@@ -86,8 +85,6 @@ namespace Infrastructure.Repository
 
         public async System.Threading.Tasks.Task<Worklog> UpdateAsync(Worklog worklog)
         {
-            worklog.UpdatedAt = DateTime.UtcNow;
-            
             _context.Worklogs.Update(worklog);
             await _context.SaveChangesAsync();
             

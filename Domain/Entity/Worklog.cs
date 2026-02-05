@@ -11,7 +11,6 @@ namespace Domain.Entity
         public string? Note { get; set; }
         
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
 
         // Foreign Keys
         public Guid TaskId { get; set; }
