@@ -9,10 +9,18 @@ namespace Domain.Entity
         public string? FullName { get; set; }
         public string? Phone { get; set; }
         public string? Address { get; set; }
+        public bool IsActive { get; set; } = true;
+        
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         public Guid RoleId { get; set; }
         public Role Role { get; set; } = null!;
 
+        // Navigation Properties
         public ICollection<JwtToken> JwtTokens { get; set; } = new List<JwtToken>();
+        public ICollection<Task> AssignedTasks { get; set; } = new List<Task>();
+        public ICollection<Task> CreatedTasks { get; set; } = new List<Task>();
+        public ICollection<Worklog> Worklogs { get; set; } = new List<Worklog>();
     }
 }

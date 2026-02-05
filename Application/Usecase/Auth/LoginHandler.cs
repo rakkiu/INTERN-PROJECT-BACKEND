@@ -22,7 +22,7 @@ namespace Application.Usecase.Auth
         {
             var user = await _repo.GetByEmailAsync(request.email, cancellationToken);
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.password, user.PasswordHash))
-                throw new UnauthorizedAccessException("Invalid email or password.");
+                throw new UnauthorizedAccessException("Invalid email or password.............");
 
             //if (user.IsActive == false)
             //    throw new UnauthorizedAccessException("User account is deactivated.");

@@ -1,0 +1,114 @@
+using Domain.Entity;
+using Domain.Interface;
+using Infrastructure.Identity;
+using Microsoft.EntityFrameworkCore;
+
+namespace Infrastructure.Repository
+{
+    public class WorklogRepository : IWorklogRepository
+    {
+        private readonly ApplicationDbContext _context;
+
+        public WorklogRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<Worklog?> GetByIdAsync(Guid id)
+        {
+            return await _context.Worklogs
+                .Include(w => w.Task)
+                .Include(w => w.User)
+                .FirstOrDefaultAsync(w => w.Id == id);
+        }
+
+        public async Task<IEnumerable<Worklog>> GetAllAsync()
+        {
+            return await _context.Worklogs
+                .Include(w => w.Task)
+                .Include(w => w.User)
+                .OrderByDescending(w => w.Date)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Worklog>> GetByUserIdAsync(Guid userId)
+        {
+            return await _context.Worklogs
+                .Include(w => w.Task)
+                .Where(w => w.UserId == userId)
+                .OrderByDescending(w => w.Date)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Worklog>> GetByTaskIdAsync(Guid taskId)
+        {
+            return await _context.Worklogs
+                .Include(w => w.User)
+                .Where(w => w.TaskId == taskId)
+                .OrderByDescending(w => w.Date)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Worklog>> GetByUserIdAndDateRangeAsync(Guid userId, DateTime startDate, DateTime endDate)
+        {
+            return await _context.Worklogs
+                .Include(w => w.Task)
+                .Where(w => w.UserId == userId && w.Date >= startDate && w.Date <= endDate)
+                .OrderByDescending(w => w.Date)
+                .ToListAsync();
+        }
+
+        public async Task<Worklog?> GetByUserTaskAndDateAsync(Guid userId, Guid taskId, DateTime date)
+        {
+            return await _context.Worklogs
+                .Include(w => w.Task)
+                .Include(w => w.User)
+                .FirstOrDefaultAsync(w => w.UserId == userId && w.TaskId == taskId && w.Date.Date == date.Date);
+        }
+
+        public async Task<decimal> GetTotalHoursByUserAndDateAsync(Guid userId, DateTime date)
+        {
+            return await _context.Worklogs
+                .Where(w => w.UserId == userId && w.Date.Date == date.Date)
+                .SumAsync(w => w.HoursSpent);
+        }
+
+        public async Task<Worklog> CreateAsync(Worklog worklog)
+        {
+            worklog.CreatedAt = DateTime.UtcNow;
+            worklog.UpdatedAt = DateTime.UtcNow;
+            
+            _context.Worklogs.Add(worklog);
+            await _context.SaveChangesAsync();
+            
+            return worklog;
+        }
+
+        public async Task<Worklog> UpdateAsync(Worklog worklog)
+        {
+            worklog.UpdatedAt = DateTime.UtcNow;
+            
+            _context.Worklogs.Update(worklog);
+            await _context.SaveChangesAsync();
+            
+            return worklog;
+        }
+
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            var worklog = await _context.Worklogs.FindAsync(id);
+            if (worklog == null)
+                return false;
+
+            _context.Worklogs.Remove(worklog);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> ExistsAsync(Guid userId, Guid taskId, DateTime date)
+        {
+            return await _context.Worklogs
+                .AnyAsync(w => w.UserId == userId && w.TaskId == taskId && w.Date.Date == date.Date);
+        }
+    }
+}
