@@ -34,6 +34,7 @@ namespace Presentation.Extentions
             //Dependency Injection
             // Register repositories
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<IWorklogRepository, WorklogRepository>();
