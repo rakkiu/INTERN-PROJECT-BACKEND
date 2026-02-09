@@ -42,6 +42,7 @@ namespace Presentation.Extentions
             // Register services
             services.Configure<JwtSettings>(config.GetSection("JwtSettings")); // Configure JwtSettings
             services.AddScoped<IJwtService, JwtService>(); // Register JwtService
+            services.AddScoped<Application.Services.IOverdueCheckService, Application.Services.OverdueCheckService>();
 
             // 🔹 MediatR
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(LoginHandler).Assembly));
