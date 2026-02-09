@@ -10,7 +10,7 @@ namespace Domain.Interfaces
         /// <summary>
         /// Gets the list user.
         /// </summary>
-        Task<IEnumerable<User>> GetListUser();
+        Task<IEnumerable<User>> GetListUser(CancellationToken ct = default);
 
         /// <summary>
         /// Gets the by email asynchronous.
@@ -50,8 +50,8 @@ namespace Domain.Interfaces
         void Remove(User user);
 
         /// <summary>
-        /// Gets users by role code.
-   
+        /// Updates user in the database.
+        /// </summary>
         void UpdateV1(User user);
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Model.Auth.Login;
+using BCrypt.Net;
 using Domain.Entity;
 using Domain.Interface;
 using Domain.Interfaces;
@@ -24,7 +25,7 @@ namespace Application.Usecase.Auth.Login
         {
             var user = await _repo.GetByEmailAsync(request.email, cancellationToken);
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.password, user.PasswordHash))
-                throw new UnauthorizedAccessException("Invalid email or password.............");
+                throw new UnauthorizedAccessException("Invalid email or password");
 
             // Generate tokens
             var accessToken = _jwt.GenerateAccessToken(user);
@@ -54,4 +55,5 @@ namespace Application.Usecase.Auth.Login
         }
     }
 }
+
 

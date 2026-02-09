@@ -9,6 +9,7 @@ using Domain.Interfaces;
 using Infrastructure.Identity; // Add this
 using Infrastructure.Shared;
 using Infrastructure.Repository;
+using Infrastructure.Services;
 using Application.Usecase.Auth.Login;
 
 namespace Presentation.Extentions
@@ -40,6 +41,9 @@ namespace Presentation.Extentions
             services.AddScoped<IWorklogRepository, WorklogRepository>();
 
             // Register services
+            services.AddScoped<IEncryptionService, EncryptionService>();
+            services.AddScoped<IPasswordHashService, PasswordHashService>();
+            services.AddScoped<IEmailService, EmailService>();
             services.Configure<JwtSettings>(config.GetSection("JwtSettings")); // Configure JwtSettings
             services.AddScoped<IJwtService, JwtService>(); // Register JwtService
 

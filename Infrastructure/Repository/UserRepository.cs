@@ -19,9 +19,13 @@ namespace Infrastructure.Repository
         {
             _context = context;
         }
-        public Task AddAsync(User user, CancellationToken ct = default)
+
+        public async Task<IEnumerable<User>> GetListUser(CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            return await _context.Users
+                .Include(u => u.Role)
+                .OrderByDescending(u => u.CreatedAt)
+                .ToListAsync(ct);
         }
 
         public async Task<User?> GetByEmailAsync(string email, CancellationToken ct = default)
@@ -35,39 +39,28 @@ namespace Infrastructure.Repository
             return user;
         }
 
-        public Task<User?> GetByEmailWithoutDecryptAsync(string email, CancellationToken ct = default)
+        public async Task<User?> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            return await _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Id == id, ct);
         }
 
-        public Task<User?> GetByIdAsync(Guid id, CancellationToken ct = default)
+        public async Task<User?> GetByIdWithRoleAsync(Guid id, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            return await _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Id == id, ct);
         }
 
-        public Task<User?> GetByIdWithoutDecryptAsync(Guid id, CancellationToken ct = default)
+        public async Task AddAsync(User user, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            await _context.Users.AddAsync(user, ct);
         }
 
-        public Task<User?> GetByIdWithRoleAsync(Guid id, CancellationToken ct = default)
+        public async Task<int> SaveChangesAsync(CancellationToken ct = default)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<User>> GetListUser()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Remove(User user)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<int> SaveChangesAsync(CancellationToken ct = default)
-        {
-            return _context.SaveChangesAsync(ct);
+            return await _context.SaveChangesAsync(ct);
         }
 
         public void Update(User user)
@@ -75,14 +68,33 @@ namespace Infrastructure.Repository
             _context.Users.Update(user);
         }
 
-        public void UpdatePasswordOnly(User user)
+        public void Remove(User user)
         {
-            _context.Entry(user).Property(u => u.PasswordHash).IsModified = true;
+            _context.Users.Remove(user);
         }
 
         public void UpdateV1(User user)
         {
             _context.Users.Update(user);
+        }
+
+        public async Task<User?> GetByIdWithoutDecryptAsync(Guid id, CancellationToken ct = default)
+        {
+            return await _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Id == id, ct);
+        }
+
+        public async Task<User?> GetByEmailWithoutDecryptAsync(string email, CancellationToken ct = default)
+        {
+            return await _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Email == email, ct);
+        }
+
+        public void UpdatePasswordOnly(User user)
+        {
+            _context.Entry(user).Property(u => u.PasswordHash).IsModified = true;
         }
     }
 }
