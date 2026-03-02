@@ -29,14 +29,10 @@ namespace Infrastructure.Repository
             var encryptedEmail = EncryptionHelper.EncryptDeterministic(email);
             var user = await _context.Users
                 .Include(u => u.Role)
-                .ThenInclude(r => r.RolePrivileges)
-                .Include(u => u.JwtTokens)
+                .Include(u => u.RefreshTokens)
                 .FirstOrDefaultAsync(u => u.Email == encryptedEmail, ct);
 
-           
-
             return user;
-
         }
 
         public Task<User?> GetByEmailWithoutDecryptAsync(string email, CancellationToken ct = default)

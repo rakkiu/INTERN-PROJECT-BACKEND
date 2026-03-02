@@ -3,16 +3,21 @@ namespace Domain.Entity
     public class User
     {
         public Guid Id { get; set; }
-        public string Username { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string PasswordHash { get; set; } = null!;
         public string? FullName { get; set; }
-        public string? Phone { get; set; }
-        public string? Address { get; set; }
+        public bool IsActive { get; set; } = true;
+        
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         public Guid RoleId { get; set; }
         public Role Role { get; set; } = null!;
 
-        public ICollection<JwtToken> JwtTokens { get; set; } = new List<JwtToken>();
+        // Navigation Properties
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+        public ICollection<WorkTask> AssignedTasks { get; set; } = new List<WorkTask>();
+        public ICollection<WorkTask> CreatedTasks { get; set; } = new List<WorkTask>();
+        public ICollection<Worklog> Worklogs { get; set; } = new List<Worklog>();
     }
 }

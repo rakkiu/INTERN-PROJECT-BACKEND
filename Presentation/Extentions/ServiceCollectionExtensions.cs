@@ -9,7 +9,7 @@ using Domain.Interfaces;
 using Infrastructure.Identity; // Add this
 using Infrastructure.Shared;
 using Infrastructure.Repository;
-using Application.Usecase.Auth;
+using Application.Usecase.Auth.Login;
 
 namespace Presentation.Extentions
 {
@@ -34,11 +34,15 @@ namespace Presentation.Extentions
             //Dependency Injection
             // Register repositories
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IJwtTokenRepository, JwtRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<ITaskRepository, TaskRepository>();
+            services.AddScoped<IWorklogRepository, WorklogRepository>();
 
             // Register services
             services.Configure<JwtSettings>(config.GetSection("JwtSettings")); // Configure JwtSettings
             services.AddScoped<IJwtService, JwtService>(); // Register JwtService
+            services.AddScoped<Application.Services.IOverdueCheckService, Application.Services.OverdueCheckService>();
 
             // 🔹 MediatR
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(LoginHandler).Assembly));
