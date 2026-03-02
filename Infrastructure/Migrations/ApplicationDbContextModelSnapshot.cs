@@ -201,7 +201,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("LogDate")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("log_date");
 
@@ -224,11 +224,11 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Date");
+                    b.HasIndex("LogDate");
 
                     b.HasIndex("TaskId");
 
-                    b.HasIndex("UserId", "TaskId", "Date")
+                    b.HasIndex("UserId", "TaskId", "LogDate")
                         .IsUnique();
 
                     b.ToTable("worklogs", (string)null);
