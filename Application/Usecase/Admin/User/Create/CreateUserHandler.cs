@@ -4,6 +4,7 @@ using Application.Utilities;
 using Domain.Entity;
 using Domain.Interfaces;
 using MediatR;
+using System.Threading.Tasks;
 
 namespace Application.Usecase.Admin.User.Create
 {
@@ -95,7 +96,7 @@ namespace Application.Usecase.Admin.User.Create
         /// <summary>
         /// Sends password to user email.
         /// </summary>
-        private async Task SendPasswordEmailAsync(string email, string password, string? fullName, CancellationToken cancellationToken)
+        private async System.Threading.Tasks.Task SendPasswordEmailAsync(string email, string password, string? fullName, CancellationToken cancellationToken)
         {
             var userName = fullName ?? email.Split('@')[0];
             var subject = "Your Account Has Been Created";
