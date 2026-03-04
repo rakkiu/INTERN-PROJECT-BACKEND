@@ -93,13 +93,13 @@ namespace Infrastructure.Identity
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.TaskId).HasColumnName("task_id");
                 entity.Property(e => e.UserId).HasColumnName("user_id");
-                entity.Property(e => e.Date).HasColumnName("log_date");
+                entity.Property(e => e.LogDate).HasColumnName("log_date");
                 entity.Property(e => e.HoursSpent).HasColumnName("hours_spent").HasPrecision(4, 2);
                 entity.Property(e => e.Note).HasColumnName("note");
                 entity.Property(e => e.CreatedAt).HasColumnName("created_at");
                 
-                entity.HasIndex(e => new { e.UserId, e.TaskId, e.Date }).IsUnique();
-                entity.HasIndex(e => e.Date);
+                entity.HasIndex(e => new { e.UserId, e.TaskId, e.LogDate }).IsUnique();
+                entity.HasIndex(e => e.LogDate);
 
                 entity.HasOne(e => e.User)
                     .WithMany(u => u.Worklogs)

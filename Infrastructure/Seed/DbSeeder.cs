@@ -14,9 +14,9 @@ namespace Infrastructure.Seed
                 // 1. Seed Roles (ADMIN, LEADER, MEMBER)
                 var roles = new[] 
                 { 
-                    new { Name = RoleNames.ADMIN, Description = "System Administrator" },
-                    new { Name = RoleNames.LEADER, Description = "Team Leader" },
-                    new { Name = RoleNames.MEMBER, Description = "Team Member" }
+                    new { Name = RoleNames.ADMIN },
+                    new { Name = RoleNames.LEADER },
+                    new { Name = RoleNames.MEMBER }
                 };
                 
                 foreach (var roleData in roles)

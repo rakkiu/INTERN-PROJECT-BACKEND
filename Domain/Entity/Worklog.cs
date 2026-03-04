@@ -6,7 +6,7 @@ namespace Domain.Entity
     public class Worklog
     {
         public Guid Id { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime LogDate { get; set; }
         public decimal HoursSpent { get; set; }
         public string? Note { get; set; }
         
