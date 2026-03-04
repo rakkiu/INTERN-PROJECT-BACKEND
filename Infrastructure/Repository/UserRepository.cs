@@ -5,8 +5,7 @@ using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repository
@@ -18,6 +17,11 @@ namespace Infrastructure.Repository
         public UserRepository(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        public async Task AddAsync(User user, CancellationToken ct = default)
+        {
+            await _context.Users.AddAsync(user, ct);
         }
 
         public async Task<IEnumerable<User>> GetListUser(CancellationToken ct = default)
@@ -39,7 +43,22 @@ namespace Infrastructure.Repository
             return user;
         }
 
+        public async Task<User?> GetByEmailWithoutDecryptAsync(string email, CancellationToken ct = default)
+        {
+            var encryptedEmail = EncryptionHelper.EncryptDeterministic(email);
+            return await _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Email == encryptedEmail, ct);
+        }
+
         public async Task<User?> GetByIdAsync(Guid id, CancellationToken ct = default)
+        {
+            return await _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Id == id, ct);
+        }
+
+        public async Task<User?> GetByIdWithoutDecryptAsync(Guid id, CancellationToken ct = default)
         {
             return await _context.Users
                 .Include(u => u.Role)
@@ -53,9 +72,9 @@ namespace Infrastructure.Repository
                 .FirstOrDefaultAsync(u => u.Id == id, ct);
         }
 
-        public async Task AddAsync(User user, CancellationToken ct = default)
+        public void Remove(User user)
         {
-            await _context.Users.AddAsync(user, ct);
+            _context.Users.Remove(user);
         }
 
         public async Task<int> SaveChangesAsync(CancellationToken ct = default)
@@ -68,28 +87,9 @@ namespace Infrastructure.Repository
             _context.Users.Update(user);
         }
 
-        public void Remove(User user)
-        {
-            _context.Users.Remove(user);
-        }
-
         public void UpdateV1(User user)
         {
             _context.Users.Update(user);
-        }
-
-        public async Task<User?> GetByIdWithoutDecryptAsync(Guid id, CancellationToken ct = default)
-        {
-            return await _context.Users
-                .Include(u => u.Role)
-                .FirstOrDefaultAsync(u => u.Id == id, ct);
-        }
-
-        public async Task<User?> GetByEmailWithoutDecryptAsync(string email, CancellationToken ct = default)
-        {
-            return await _context.Users
-                .Include(u => u.Role)
-                .FirstOrDefaultAsync(u => u.Email == email, ct);
         }
 
         public void UpdatePasswordOnly(User user)
