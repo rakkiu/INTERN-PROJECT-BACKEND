@@ -8,10 +8,6 @@
         public string? FullName { get; set; }
         public bool IsActive { get; set; } = true;
 
-        public Guid Id { get; set; }
-        public string Username { get; set; }
-        public string PasswordHash { get; set; } // Chỉ lưu hash
-
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
