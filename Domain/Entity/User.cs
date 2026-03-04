@@ -1,4 +1,4 @@
-namespace Domain.Entity
+﻿namespace Domain.Entity
 {
     public class User
     {
@@ -7,7 +7,11 @@ namespace Domain.Entity
         public string PasswordHash { get; set; } = null!;
         public string? FullName { get; set; }
         public bool IsActive { get; set; } = true;
-        
+
+        public Guid Id { get; set; }
+        public string Username { get; set; }
+        public string PasswordHash { get; set; } // Chỉ lưu hash
+
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
